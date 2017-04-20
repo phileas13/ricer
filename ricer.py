@@ -30,20 +30,17 @@ def readconfig(inputfile):
 	colors  = config['colors']
 	return colors#, options, files
 
-def findandreplace(pattern, subst, file):
-	x = fileinput.input(file, inplace=1)
-	for line in x:
-		if pattern in line:
-			line = subst
-			print(line)
-		else:
-			sys.stdout.write(line)
-	x.close()
-			
-def iterateforreplace(d, path):
+def findandreplace(file):
 	for key, value in d.items():
-		findandreplace(key, value, path)
-	
+		x = fileinput.input(file, inplace=1)
+		for line in x:
+			if pattern in line:
+				line = subst
+				print(line)
+			else:
+				sys.stdout.write(line)
+		x.close()
+				
 def write_i3(colors, I3CONFIG_PATH):
 	#backup(I3CONFIG_PATH)
 	d = {
@@ -51,7 +48,7 @@ def write_i3(colors, I3CONFIG_PATH):
 		'        statusline ': '        statusline {}'.format(colors['foreground']),
 		'        separator ': '        separator {}'.format(colors['foreground'])
 	}
-	iterateforreplace(d, I3CONFIG_PATH)
+	findandreplace(I3CONFIG_PATH)
 
 def write_rofi(colors, ROFI_PATH):
 	#backup(ROFI_PATH)
@@ -62,7 +59,7 @@ def write_rofi(colors, ROFI_PATH):
 		'rofi.color-active: ': 'rofi.color-active: {}, {}, {}, {}, {}'.format(colors['background'], colors['color15'], colors['color0'], colors['color10'], colors['color0']),
 		'rofi.color-urgent: ': 'rofi.color-urgent: {}, {}, {}, {}, {}'.format(colors['background'], colors['color9'], colors['color0'], colors['color9'], colors['color15'])
 	}
-	iterateforreplace(d, ROFI_PATH)
+	findandreplace(ROFI_PATH)
 
 def write_termite(colors, TERMITE_PATH):
 	d = {
@@ -88,7 +85,7 @@ def write_termite(colors, TERMITE_PATH):
 		'color7': 'color7      = {}'.format(colors['color7']),
 		'color15': 'color15      = {}'.format(colors['color15'])
 	}
-	iterateforreplace(d, TERMITE_PATH)
+	findandreplace(TERMITE_PATH)
 
 def main(argv, HELP, I3CONFIG_PATH, ROFI_PATH, TERMITE_PATH):
 	if len(argv) == 0:
